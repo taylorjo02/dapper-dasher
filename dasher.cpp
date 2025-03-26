@@ -12,16 +12,25 @@ int main()
   // every frame, velocity will change this amount per frame
   const int gravity{1};
 
-  // rectangle dimensions
-  const int recWidth{50};
-  const int recHeight{80};
+  Texture2D scarfy = LoadTexture("textures/scarfy.png");
+
+  Rectangle scarfyRectangle;
+  scarfyRectangle.width = scarfy.width/6;
+  scarfyRectangle.height = scarfy.height;
+  scarfyRectangle.x = 0;
+  scarfyRectangle.y = 0;
+
+  Vector2 scarfyPosition;
+
+  scarfyPosition.x = windowWidth/2 - scarfyRectangle.width/2;
+  scarfyPosition.y = windowHeight - scarfyRectangle.height;
+
   
   // check if object is in the air
   bool isInAir{};
   // jump velocity
   const int jumpVel{-22};
 
-  int posY{windowHeight - recHeight};
   int velocity{0}; // measured in pixels per frame ( distance / time ) ex. 20 pixels in 2 frames = 10 pixels per frame
 
 
@@ -34,7 +43,7 @@ int main()
     ClearBackground(WHITE);
 
     // perform ground check
-    if (posY >= windowHeight - recHeight)
+    if (scarfyPosition.y >= windowHeight - scarfyRectangle.height)
     {
       // rectangle is on the ground
       isInAir = false;
@@ -55,11 +64,12 @@ int main()
     }
 
     // update position
-    posY += velocity;
+    scarfyPosition.y += velocity;
 
-    DrawRectangle(windowWidth / 2, posY, recWidth, recHeight, BLUE);
+    DrawTextureRec(scarfy, scarfyRectangle, scarfyPosition, WHITE);
 
     EndDrawing();
   }
+  UnloadTexture(scarfy);
   CloseWindow();
 }
