@@ -8,9 +8,9 @@ int main()
 
   InitWindow(windowWidth, windowHeight, "Dapper Dasher");
 
-  // acceleration due to gravity value (pixels/frame) per frame
-  // every frame, velocity will change this amount per frame
-  const int gravity{1};
+  // acceleration due to gravity value (pixels/second) per second
+  // every second, velocity will change this amount per second
+  const int gravity{1'000};
 
   Texture2D scarfy = LoadTexture("textures/scarfy.png");
 
@@ -29,7 +29,7 @@ int main()
   // check if object is in the air
   bool isInAir{};
   // jump velocity
-  const int jumpVel{-22};
+  const int jumpVel{-600}; // pixels/second instead of frame
 
   int velocity{0}; // measured in pixels per frame ( distance / time ) ex. 20 pixels in 2 frames = 10 pixels per frame
 
@@ -38,6 +38,9 @@ int main()
 
   while (!WindowShouldClose()) // while loop is processed every frame
   {
+    // initializing delta time
+    const float dT{GetFrameTime()};
+
     BeginDrawing();
 
     ClearBackground(WHITE);
@@ -53,7 +56,7 @@ int main()
     {
       // apply gravity because the object is in the air
       isInAir = true;
-      velocity += gravity;
+      velocity += gravity * dT; // multiply by delta time to convert value to time instead of frame 
     }
 
     // jump check
@@ -64,7 +67,7 @@ int main()
     }
 
     // update position
-    scarfyPosition.y += velocity;
+    scarfyPosition.y += velocity * dT; // multiply by delta time to convert value to time instead of frame 
 
     DrawTextureRec(scarfy, scarfyRectangle, scarfyPosition, WHITE);
 
