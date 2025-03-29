@@ -19,7 +19,7 @@ int main()
 
   Vector2 nebulaPosition{windowWidth, windowHeight - nebulaRectangle.height};
 
-  int nebulaVelocity{-600}; // neb x velocity (pixels/second)
+  int nebulaVelocity{-200}; // neb x velocity (pixels/second)
 
   // scarfy
   Texture2D scarfy = LoadTexture("textures/scarfy.png");
@@ -35,7 +35,14 @@ int main()
   scarfyPosition.x = windowWidth / 2 - scarfyRectangle.width / 2;
   scarfyPosition.y = windowHeight - scarfyRectangle.height;
 
-  // animation frame
+  // nebula animation frame
+  int nebFrame{};
+
+  const float nebUpdateTime{1.0 / 12.0};
+
+  float nebRunningTime{};
+
+  // scarfy animation frame
   int frame{};
   // amount of time before we update animation frame
   const float updateTime{1.0 / 12.0};
@@ -85,12 +92,14 @@ int main()
 
     // update scarfy position
     scarfyPosition.y += velocity * dT; // multiply by delta time to convert value to time instead of frame
+
     
+    // update scarfy
     if (!isInAir)
     {
       // update running time
       runningTime += dT;
-
+      
       // update animation frame
       if (runningTime >= updateTime)
       {
@@ -103,10 +112,23 @@ int main()
         }
       }
     }
+    
+    nebRunningTime += dT;
+    
+    if (nebRunningTime >= nebUpdateTime)
+    {
+      nebRunningTime = 0.0;
+      nebulaRectangle.x = nebFrame * nebulaRectangle.width;
+      nebFrame++;
+      if (nebFrame > 7)
+      {
+        nebFrame = 0;
+      }
+    }
 
     // draw nebula hazard
     DrawTextureRec(nebula, nebulaRectangle, nebulaPosition, WHITE);
-
+    
     // draw scarfy
     DrawTextureRec(scarfy, scarfyRectangle, scarfyPosition, WHITE);
 
