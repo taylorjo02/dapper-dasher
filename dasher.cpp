@@ -15,24 +15,28 @@ int main()
   Texture2D scarfy = LoadTexture("textures/scarfy.png");
 
   Rectangle scarfyRectangle;
-  scarfyRectangle.width = scarfy.width/6;
+  scarfyRectangle.width = scarfy.width / 6;
   scarfyRectangle.height = scarfy.height;
   scarfyRectangle.x = 0;
   scarfyRectangle.y = 0;
 
   Vector2 scarfyPosition;
 
-  scarfyPosition.x = windowWidth/2 - scarfyRectangle.width/2;
+  scarfyPosition.x = windowWidth / 2 - scarfyRectangle.width / 2;
   scarfyPosition.y = windowHeight - scarfyRectangle.height;
 
-  
+  // animation frame
+  int frame{};
+  // amount of time before we update animation frame
+  const float updateTime{1.0 / 12.0};
+
+  float runningTime{};
   // check if object is in the air
   bool isInAir{};
   // jump velocity
   const int jumpVel{-600}; // pixels/second instead of frame
 
   int velocity{0}; // measured in pixels per frame ( distance / time ) ex. 20 pixels in 2 frames = 10 pixels per frame
-
 
   SetTargetFPS(60);
 
@@ -56,7 +60,7 @@ int main()
     {
       // apply gravity because the object is in the air
       isInAir = true;
-      velocity += gravity * dT; // multiply by delta time to convert value to time instead of frame 
+      velocity += gravity * dT; // multiply by delta time to convert value to time instead of frame
     }
 
     // jump check
@@ -67,7 +71,22 @@ int main()
     }
 
     // update position
-    scarfyPosition.y += velocity * dT; // multiply by delta time to convert value to time instead of frame 
+    scarfyPosition.y += velocity * dT; // multiply by delta time to convert value to time instead of frame
+
+    // update running time
+    runningTime += dT;
+
+    // update animation frame
+    if (runningTime >= updateTime)
+    {
+      runningTime = 0.0;
+      scarfyRectangle.x = frame * scarfyRectangle.width;
+      frame++;
+      if (frame > 5)
+      {
+        frame = 0;
+      }
+    }
 
     DrawTextureRec(scarfy, scarfyRectangle, scarfyPosition, WHITE);
 
